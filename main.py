@@ -39,7 +39,6 @@ def calc_p_value():
 
     p_value_result = get_p_value(con_conv, test_conv,
                                  control_number_of_visitors, variation_number_of_visitors)
-    print 'P-value %s' % p_value_result
     return render_template('index.html', p_value=p_value_result)
 
 
