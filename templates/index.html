@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+    <title>P value calculator</title>
+    <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<form action="/calcpvalue" method="post">
+    <table>
+        <tr>
+            <th></th>
+            <th>Control</th>
+            <th>Variation</th>
+        </tr>
+        <tr>
+            <td>Number of visitors</td>
+            <td><input type="text" name="control_number_of_visitors"></td>
+            <td><input type="text" name="variation_number_of_visitors"></td>
+        </tr>
+        <tr>
+            <td>Number of conversion</td>
+            <td><input type="text" name="control_number_of_conversion"></td>
+            <td><input type="text" name="variation_number_of_conversions"></td>
+        </tr>
+    </table>
+    <input type="submit" value="Submit">
+</form>
+{%if p_value%}
+<h1>The p value is: {{p_value}}</h1>
+{%endif%}
+</body>
+</html>
