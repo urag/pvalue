@@ -15,7 +15,7 @@
 # [START gae_python37_render_template]
 import datetime
 
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, abort
 from scipy import stats
 
 app = Flask(__name__)
@@ -26,20 +26,22 @@ def root():
     return render_template('index.html')
 
 
-@app.route('/calcpvalue', methods=['POST'])
+@app.route('/', methods=['POST'])
 def calc_p_value():
-    control_number_of_visitors = float(request.form.get('control_number_of_visitors'))
-    control_number_of_conversion = float(request.form.get('control_number_of_conversion'))
+    try:
+        control_number_of_visitors = float(request.form.get('control_number_of_visitors'))
+        control_number_of_conversion = float(request.form.get('control_number_of_conversion'))
+        variation_number_of_visitors = float(request.form.get('variation_number_of_visitors'))
+        variation_number_of_conversions = float(request.form.get('variation_number_of_conversions'))
 
-    variation_number_of_visitors = float(request.form.get('variation_number_of_visitors'))
-    variation_number_of_conversions = float(request.form.get('variation_number_of_conversions'))
+        con_conv = control_number_of_conversion / control_number_of_visitors
+        test_conv = variation_number_of_conversions / variation_number_of_visitors
 
-    con_conv = control_number_of_conversion / control_number_of_visitors
-    test_conv = variation_number_of_conversions / variation_number_of_visitors
-
-    p_value_result = get_p_value(con_conv, test_conv,
-                                 control_number_of_visitors, variation_number_of_visitors)
-    return render_template('index.html', p_value=p_value_result)
+        p_value_result = get_p_value(con_conv, test_conv,
+                                     control_number_of_visitors, variation_number_of_visitors)
+        return render_template('index.html', p_value=round(p_value_result, 3))
+    except ValueError:
+        abort(400)
 
 
 def get_p_value(con_conv, test_conv, con_size, test_size):
